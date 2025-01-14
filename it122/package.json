@@ -1,0 +1,10 @@
+{
+    "name": "it122",
+    "description": "My application for IT122",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/askootsky/it122"
+    },
+    "type": "module"
+}
