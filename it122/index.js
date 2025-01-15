@@ -5,11 +5,11 @@ http.createServer((req,res) => {
     switch(path) {
         case '/':
             res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('Home page');
+            res.end('This is my home page');
             break;
         case '/about':
             res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('About page');
+            res.end('My name is Austin. I am in IT 122.');
             break;
         default:
             res.writeHead(404, {'Content-Type': 'text/plain'});
