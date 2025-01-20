@@ -1,0 +1,34 @@
+body {
+    background-image: url(../images/background.jpg);
+  }
+li {
+    margin-left: 10px;
+}
+li.first {
+    margin-top: 10px;
+}
+li.homeLast {
+    margin-bottom: 5px;
+    border-bottom: 5px solid red;
+}
+div {
+    border-top: 5px solid black;
+    border-bottom: 5px solid black;
+    
+    background-color: whitesmoke;
+}
+p {
+    margin-left: 10px;
+}
+h1 {
+    margin-left: 10px;
+}
+h2 {
+    margin-left: 10px;
+}
+h3 {
+    margin-left: 10px;
+}
+img {
+    margin: 10px;
+}
