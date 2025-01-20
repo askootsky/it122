@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <% if (result) { %>
+            <div>
+            <h2><%= name %></h2>
+            </div>
+
+            <img src="images/<%= result.name %>.png" alt="<%= result.name %>" width="300" height="300">
+
+            <div>
+            <li class="first"><b>Category:</b> <%= result.category %></li>
+            <li><b>Type:</b> <%= result.type %></li>
+            <li><b>Pokedex Number:</b> <%= result.dexNum %></li>
+            <li><b>First Debuted In:</b> <%= result.debut %></li>
+            <p><a href="/"> Return Home</a></p>
+            </div>
+        <% }
+        else { %>
+            <div>
+            <h2><%= name %> not found</h2>
+            </div>
+        <% } %>
+    </body>
+</html>

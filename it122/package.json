@@ -6,5 +6,9 @@
         "type": "git",
         "url": "https://github.com/askootsky/it122"
     },
-    "type": "module"
+    "type": "module",
+    "dependencies": {
+        "ejs": "^3.1.10",
+        "express": "^4.21.2"
+    }
 }
