@@ -1,5 +1,5 @@
 // Import from data.js
-import { getAllPokes, getOnePoke } from './data.js';
+import { Pokemon } from "./models/Pokemon.js";
 
 //Import express
 'use strict'
@@ -14,19 +14,37 @@ app.use(express.urlencoded());
 app.set('view engine', 'ejs');
 
 // Home Page route
-app.get('/', (req, res) => {
-    res.render('home', {pokes: getAllPokes()});
+app.get('/', (req, res, next) => {
+    Pokemon.find({}).lean()
+        .then((pokemon) => {
+            res.render('home', { pokemon });
+        })
+        .catch(err => console.log(err));
 });
 
 // Detail page
-app.get('/detail', (req, res) => {
-    console.log(req.query)
-    let result = getOnePoke(req.query.name);
-    res.render('detail', {
-        name: req.query.name,
-        result
-        }
-    );
+app.get('/detail', (req,res,next) => {
+    Pokemon.findOne({ name:req.query.name }).lean()
+        .then((pokemon) => {
+            res.render('detail', {result: pokemon} );
+        })
+        .catch(err => next(err));
+});
+
+// Delete item route
+app.get('/delete', (req, res, next) => {
+    Pokemon.findOne({ name: req.query.name }).lean()
+        .then((pokemon) => {
+            if (pokemon) {
+                return Pokemon.deleteOne({ name: req.query.name })
+                    .then(() => {
+                        res.render('delete', { result: pokemon });
+                    });
+            } else {
+                res.render('delete', { result: pokemon });
+            }
+        })
+        .catch(err => next(err));
 });
 
 // About Page route

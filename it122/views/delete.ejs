@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <% if (result) { %>
+            <div>
+            <h2><%= result.name %> has been found and deleted from the database.</h2>
+            <p><a href="/">Return Home</a></p>
+            </div>
+        <% }
+        else { %>
+            <div>
+            <h2>Pokemon could not be found to be deleted.</h2>
+            <p>Please make sure you spelled the Pokemon's name correctly.</p>
+            <p><a href="/"> Return Home</a></p>
+            </div>
+        <% } %>
+    </body>
+</html>

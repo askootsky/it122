@@ -5,22 +5,28 @@
     <body>
         <% if (result) { %>
             <div>
-            <h2><%= name %></h2>
+            <h2><%= result.name %></h2>
             </div>
 
             <img src="images/<%= result.name %>.png" alt="<%= result.name %>" width="300" height="300">
 
             <div>
             <li class="first"><b>Category:</b> <%= result.category %></li>
-            <li><b>Type:</b> <%= result.type %></li>
-            <li><b>Pokedex Number:</b> <%= result.dexNum %></li>
+            <li><b>Type:</b> 
+                <% if (result.type.length === 1) { %>
+                    <%= result.type[0] %>
+                <% } else { %>
+                    <%= result.type[0] %> | <%= result.type[1] %>
+                <% } %>
+            </li>
+            <li><b>Pokedex Number:</b> <%= result.dex_num %></li>
             <li><b>First Debuted In:</b> <%= result.debut %></li>
             <p><a href="/"> Return Home</a></p>
             </div>
         <% }
         else { %>
             <div>
-            <h2><%= name %> not found</h2>
+            <h2>Pokemon not found</h2>
             <p><a href="/"> Return Home</a></p>
             </div>
         <% } %>
