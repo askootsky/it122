@@ -97,9 +97,9 @@ app.set('view engine', 'ejs');
 
     //Add/update API route
     app.post('/api/pokemon', async (req, res) => {
-        const { name, category, type, dex_num, debut } = req.body;
+        const { name, category, type, dex_num, debut, picture } = req.body;
 
-        if (!name || !category || !type || !dex_num || !debut) {
+        if (!name || !category || !type || !dex_num || !debut || !picture) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
@@ -113,17 +113,51 @@ app.set('view engine', 'ejs');
                 existingPokemon.type = type;
                 existingPokemon.dex_num = dex_num;
                 existingPokemon.debut = debut;
+                existingPokemon.picture = picture;
                 await existingPokemon.save();
                 return res.json({ message: 'Pokémon updated successfully', pokemon: existingPokemon });
             } else {
                 // Create new pokemon
-                const newPokemon = new Pokemon({ name, category, type, dex_num, debut });
+                const newPokemon = new Pokemon({ name, category, type, dex_num, debut, picture });
                 await newPokemon.save();
                 return res.status(201).json({ message: 'Pokémon created successfully', pokemon: newPokemon });
             }
         } catch (err) {
             console.error('Error saving Pokémon:', err);
             return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+
+    app.post('/api/pokemon', async (req, res) => {
+        const { name, category, type, dex_num, debut, picture } = req.body;
+    
+        // Validate required fields
+        if (!name || !category || !type || !dex_num || !debut || !picture) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+    
+        try {
+            // Check if pokemon exists based on name (and possibly category/type if needed)
+            const existingPokemon = await Pokemon.findOne({ name });
+    
+            if (existingPokemon) {
+                // Update existing Pokémon
+                existingPokemon.category = category;
+                existingPokemon.type = type;
+                existingPokemon.dex_num = dex_num;
+                existingPokemon.debut = debut;
+                existingPokemon.picture = picture;
+                await existingPokemon.save();
+                return res.json({ message: 'Pokémon updated successfully', pokemon: existingPokemon });
+            } else {
+                // Create new Pokémon if not found
+                const newPokemon = new Pokemon({ name, category, type, dex_num, debut, picture });
+                await newPokemon.save();
+                return res.status(201).json({ message: 'Pokémon created successfully', pokemon: newPokemon });
+            }
+        } catch (err) {
+            console.error('Error saving Pokémon:', err);
+            return res.status(500).json({ error: 'Internal Server Error', details: err.message });
         }
     });
 
