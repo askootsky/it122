@@ -19,8 +19,9 @@ const pokemonSchema = new Schema({
  name: { type: String, required: true },
  category: String,
  type: Array,
- dexNum: Number,
- debut: String
+ dex_num: Number,
+ debut: String,
+ picture: String,
 });
 
 export const Pokemon = mongoose.model('Pokemon', pokemonSchema, 'pokemon');
