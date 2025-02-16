@@ -11,6 +11,168 @@
         </div>
 
         <div>
+            <h3>Pokemon List</h3>
+            <div id="pokemon-list"></div>
+        </div>
+        <div>
+            <div id="pokemon-details"></div>
+        </div>
+
+        <script type="text/babel">
+            // Define component
+            const PokemonApp = ({ pokemon }) => {
+                const [selectedPokemon, setSelectedPokemon] = React.useState(null);
+                const [editedPokemon, setEditedPokemon] = React.useState(null);
+
+                // Handle click event for selected pokemon
+                const handlePokemonClick = (poke) => {
+                    setSelectedPokemon(poke);
+                    setEditedPokemon({ ...poke });
+                };
+
+                // Handle form changes
+                const handleInputChange = (e) => {
+                    const { name, value } = e.target;
+                    setEditedPokemon((prev) => ({
+                        ...prev,
+                        [name]: value,
+                    }));
+                };
+
+                // Reset the form
+                const handleClear = () => {
+                    setEditedPokemon({ ...selectedPokemon });
+                };
+
+                return (
+                    <div>
+                        <div>
+                            <h3>Pokemon</h3>
+                            <ul>
+                                {pokemon.length > 0 ? (
+                                    pokemon.map((poke) => (
+                                        <li key={poke._id}>
+                                            <a href="#" onClick={() => handlePokemonClick(poke)}>
+                                                {poke.name}
+                                            </a>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <p>No Pokémon found.</p>
+                                )}
+                            </ul>
+                        </div>
+
+                        <h3>Selected Pokémon</h3>
+
+                        <div>
+                            {selectedPokemon ? (
+                                <div>
+                                    <h3>{selectedPokemon.name}</h3>
+                                    <img src={selectedPokemon.picture} alt={selectedPokemon.name} width="300" height="300" />
+                                    <p><b>Category:</b> {selectedPokemon.category}</p>
+                                    <p><b>Type:</b> {selectedPokemon.type.join(" | ")}</p>
+                                    <p><b>Pokedex Number:</b> {selectedPokemon.dex_num}</p>
+                                    <p><b>Debut:</b> {selectedPokemon.debut}</p>
+                                    
+                                </div>
+                            ) : (
+                                <p>No Pokémon selected.</p>
+                            )}
+
+                            {editedPokemon ? (
+                                <div>
+                                    <h4>Edit Pokémon</h4>
+                                    <form>
+                                        <label>Name:</label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={editedPokemon.name || ""}
+                                            onChange={handleInputChange}
+                                        />
+                                        <br />
+                                        <label>Category:</label>
+                                        <input
+                                            type="text"
+                                            name="category"
+                                            value={editedPokemon.category || ""}
+                                            onChange={handleInputChange}
+                                        />
+                                        <br />
+                                        <label>Type:</label>
+                                        <input
+                                            type="text"
+                                            name="type"
+                                            value={editedPokemon.type.join(" | ")}
+                                            onChange={(e) => handleInputChange({ target: { name: 'type', value: e.target.value.split(' | ') } })}
+                                        />
+                                        <br />
+                                        <label>Pokedex Number:</label>
+                                        <input
+                                            type="number"
+                                            name="dex_num"
+                                            value={editedPokemon.dex_num || ""}
+                                            onChange={handleInputChange}
+                                        />
+                                        <br />
+                                        <label>Debut:</label>
+                                        <input
+                                            type="text"
+                                            name="debut"
+                                            value={editedPokemon.debut || ""}
+                                            onChange={handleInputChange}
+                                        />
+                                        <br />
+                                        <label>Picture URL:</label>
+                                        <input
+                                            type="text"
+                                            name="picture"
+                                            value={editedPokemon.picture || ""}
+                                            onChange={handleInputChange}
+                                        />
+                                        <br />
+                                        <button type="button" onClick={handleClear}>Clear</button>
+                                    </form>
+                                </div>
+                            ) : null}
+                            {editedPokemon ? (
+                                <div>
+                                    <h4>Current Edited Pokémon Data:</h4>
+                                    <p><b>Name:</b> {editedPokemon.name}</p>
+                                    <p><b>Category:</b> {editedPokemon.category}</p>
+                                    <p><b>Type:</b> {editedPokemon.type.join(" | ")}</p>
+                                    <p><b>Pokedex Number:</b> {editedPokemon.dex_num}</p>
+                                    <p><b>Debut:</b> {editedPokemon.debut}</p>
+                                    <p><b>Picture URL:</b> {editedPokemon.picture}</p>
+                                </div>
+                            ) : null}
+                        </div>
+                    </div>
+                );
+            };
+
+            const pokemonData = <%- JSON.stringify(pokemon) %>;
+
+            ReactDOM.render(<PokemonApp pokemon={pokemonData} />, document.getElementById('pokemon-list'));
+        </script>
+    </body>
+</html>
+
+
+<!-- <html>
+    <head>
+        <link rel="stylesheet" href="css/styles.css">
+        <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    </head>
+    <body>
+        <div>
+            <h1>Home</h1>
+        </div>
+
+        <div>
             <h3>Pokemon</h3>
             <div id="pokemon-list"></div>
         </div>
@@ -41,7 +203,7 @@
             ReactDOM.render(<PokemonList pokemon={pokemonData} />, document.getElementById('pokemon-list'));
         </script>
     </body>
-</html>
+</html> -->
 
 <!-- <html>
     <head>
