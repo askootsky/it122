@@ -19,18 +19,33 @@
         </div>
 
         <script type="text/babel">
-            // Define component
-            const PokemonApp = ({ pokemon }) => {
-                const [selectedPokemon, setSelectedPokemon] = React.useState(null);
-                const [editedPokemon, setEditedPokemon] = React.useState(null);
+            const { useState, useEffect } = React;
 
-                // Handle click event for selected pokemon
+            const PokemonApp = () => {
+                const [pokemon, setPokemon] = useState([]);
+                const [selectedPokemon, setSelectedPokemon] = useState(null);
+                const [editedPokemon, setEditedPokemon] = useState(null);
+
+                // Load data after page renders
+                useEffect(() => {
+                    const fetchPokemon = async () => {
+                        try {
+                            const response = await fetch('/api/pokemon');
+                            const data = await response.json();
+                            setPokemon(data);
+                        } catch (err) {
+                            console.error("Failed to fetch Pokemon:", err);
+                        }
+                    };
+
+                    fetchPokemon();
+                }, []);
+
                 const handlePokemonClick = (poke) => {
                     setSelectedPokemon(poke);
                     setEditedPokemon({ ...poke });
                 };
 
-                // Handle form changes
                 const handleInputChange = (e) => {
                     const { name, value } = e.target;
                     setEditedPokemon((prev) => ({
@@ -39,9 +54,47 @@
                     }));
                 };
 
-                // Reset the form
-                const handleClear = () => {
-                    setEditedPokemon({ ...selectedPokemon });
+                const handleSave = async () => {
+                    const response = await fetch('/api/pokemon', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(editedPokemon),
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        setPokemon((prev) => {
+                            const index = prev.findIndex((poke) => poke._id === result.pokemon._id);
+                            if (index !== -1) {
+                                prev[index] = result.pokemon;
+                            } else {
+                                prev.push(result.pokemon);
+                            }
+                            return [...prev];
+                        });
+                        setSelectedPokemon(result.pokemon);
+                    } else {
+                        console.error('Error saving Pokemon:', result.error);
+                    }
+                };
+
+                const handleDelete = async () => {
+                    if (!selectedPokemon) return;
+
+                    const response = await fetch('/api/pokemon?name=' + selectedPokemon.name, {
+                        method: 'DELETE',
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        setPokemon((prev) => prev.filter((poke) => poke._id !== selectedPokemon._id));
+                        setSelectedPokemon(null);
+                        setEditedPokemon(null);
+                    } else {
+                        console.error('Error deleting Pokemon:', result.error);
+                    }
                 };
 
                 return (
@@ -74,7 +127,6 @@
                                     <p><b>Type:</b> {selectedPokemon.type.join(" | ")}</p>
                                     <p><b>Pokedex Number:</b> {selectedPokemon.dex_num}</p>
                                     <p><b>Debut:</b> {selectedPokemon.debut}</p>
-                                    
                                 </div>
                             ) : (
                                 <p>No Pokémon selected.</p>
@@ -132,19 +184,9 @@
                                             onChange={handleInputChange}
                                         />
                                         <br />
-                                        <button type="button" onClick={handleClear}>Clear</button>
+                                        <button type="button" onClick={handleSave}>Save</button>
+                                        <button type="button" onClick={handleDelete}>Delete</button>
                                     </form>
-                                </div>
-                            ) : null}
-                            {editedPokemon ? (
-                                <div>
-                                    <h4>Current Edited Pokémon Data:</h4>
-                                    <p><b>Name:</b> {editedPokemon.name}</p>
-                                    <p><b>Category:</b> {editedPokemon.category}</p>
-                                    <p><b>Type:</b> {editedPokemon.type.join(" | ")}</p>
-                                    <p><b>Pokedex Number:</b> {editedPokemon.dex_num}</p>
-                                    <p><b>Debut:</b> {editedPokemon.debut}</p>
-                                    <p><b>Picture URL:</b> {editedPokemon.picture}</p>
                                 </div>
                             ) : null}
                         </div>
@@ -154,11 +196,10 @@
 
             const pokemonData = <%- JSON.stringify(pokemon) %>;
 
-            ReactDOM.render(<PokemonApp pokemon={pokemonData} />, document.getElementById('pokemon-list'));
+            ReactDOM.render(<PokemonApp />, document.getElementById('pokemon-list'));
         </script>
     </body>
 </html>
-
 
 <!-- <html>
     <head>
